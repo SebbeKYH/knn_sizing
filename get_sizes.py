@@ -68,7 +68,24 @@ def get_waist_sizes(data_frame):
     return waist_size
 
 
-
+def get_chest_sizes(data_frame):
+    chest_size = []
+    for chest in data_frame['chest_circumference']:
+        if 910 >= chest < 960:
+            chest_size.append('small')
+        elif 960 >= chest < 1010:
+            chest_size.append('medium')
+        elif 1010 >= chest < 1060:
+            chest_size.append('large')
+        elif 1060 >= chest < 1110:
+            chest_size.append('x-large')
+        elif 1110 >= chest < 1170:
+            chest_size.append('xx-large')
+        elif chest > 1180:
+            chest_size.append('xxx-large')
+        elif chest < 900:
+            chest_size.append('x-small')
+    return chest_size
 
 def main():
     # fething the dataframe
@@ -77,10 +94,12 @@ def main():
     height_sizes = get_height_sizes(python_data_frame)
     weight_sizes = get_weight_sizes(python_data_frame)
     waist_sizes = get_waist_sizes(python_data_frame)
+    chest_sizes = get_chest_sizes(python_data_frame)
 
     print(height_sizes)
     print(weight_sizes)
     print(waist_sizes)
+    print(chest_sizes)
 
 
 
