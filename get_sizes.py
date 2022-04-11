@@ -4,7 +4,7 @@ import pandas as pd
 def get_data_frame():
     pd.set_option('display.max_rows', None)
     pd.set_option('display.max_columns', None)
-    data_frame = pd.read_csv('./df_male_final.csv')
+    data_frame = pd.read_csv('./df_male_trimmed.csv')
     return data_frame
 
 
@@ -48,11 +48,24 @@ def get_weight_sizes(data_frame):
     return weight_size
 
 
-def get_waist_sizes(data_frame)
+def get_waist_sizes(data_frame):
     waist_size = []
-    for waist in data_frame['waist_circumference']
+    for waist in data_frame['waist_circumference']:
         if 790 >= waist < 840:
             waist_size.append('small')
+        elif 840 >= waist < 890:
+            waist_size.append('medium')
+        elif 890 <= waist < 940:
+            waist_size.append('large')
+        elif 940 <= waist < 990:
+            waist_size.append('x-large')
+        elif 990 <= waist < 1040:
+            waist_size.append('xx-large')
+        elif waist > 1050:
+            waist_size.append('xxx-large')
+        elif waist < 780:
+            waist_size.append('x-small')
+    return waist_size
 
 
 
@@ -63,9 +76,11 @@ def main():
 
     height_sizes = get_height_sizes(python_data_frame)
     weight_sizes = get_weight_sizes(python_data_frame)
+    waist_sizes = get_waist_sizes(python_data_frame)
 
     print(height_sizes)
     print(weight_sizes)
+    print(waist_sizes)
 
 
 
