@@ -1,107 +1,97 @@
 import pandas as pd
+import math
+from math import sqrt
+from scipy.spatial import distance
 
 
 def get_data_frame():
     pd.set_option('display.max_rows', None)
     pd.set_option('display.max_columns', None)
-    data_frame = pd.read_csv('./df_male_trimmed.csv')
+    data_frame = pd.read_csv('./df_male_last_one.csv')
     return data_frame
 
 
-def get_height_sizes(data_frame):
-    height_size = []
-    for total_height in data_frame['height_cm']:
-        if 170 <= total_height < 178:
-            height_size.append('small')
-        elif 174 >= total_height < 182:
-            height_size.append('medium')
-        elif 1076 >= total_height < 186:
-            height_size.append('large')
-        elif 178 <= total_height < 190:
-            height_size.append('x-large')
-        elif 180 <= total_height < 194:
-            height_size.append('xx-large')
-        elif total_height > 196:
-            height_size.append('xxx-large')
-        elif total_height < 169:
-            height_size.apped('x-small')
-    return height_size
+def get_sizes(data_frame):
+    size = []
+    for height, weight in zip (data_frame['height_cm'], data_frame['weight_hg']):
+        if 170 <= height < 178 & weight <= 550 < 650:
+            size.append('small')
+        elif 174 >= height < 182 & weight <= 650 < 750:
+            size.append('medium')
+        elif 1076 >= height < 186 & weight <= 750 < 850:
+            size.append('large')
+        elif 178 <= height < 190 & weight <= 850 < 900:
+            size.append('x-large')
+        elif 180 <= height < 194 & weight <= 900 < 950:
+            size.append('xx-large')
+        elif height > 196 & weight > 1000:
+            size.append('xxx-large')
+        elif height < 169 & weight < 550:
+            size.append('x-small')
+    return size
 
 
-def get_weight_sizes(data_frame):
-    weight_size = []
-    for total_weight in data_frame['weight_hg']:
-        if 550 >= total_weight < 650:
-            weight_size.append('small')
-        elif 650 >= total_weight < 750:
-            weight_size.append('medium')
-        elif 750 >= total_weight < 850:
-            weight_size.append('large')
-        elif 850 >= total_weight < 900:
-            weight_size.append('x-large')
-        elif 900 >= total_weight < 950:
-            weight_size.append('xx-large')
-        elif total_weight > 1000:
-            weight_size.append('xxx-large')
-        elif total_weight < 550:
-            weight_size.append('x-small')
-    return weight_size
+def calculate_distance(user_data, X_train):
+    distance = 0.0
+    for i in range(len(user_data)-1):
+        distance = (user_data[i] - X_train[i]) ** 2
+    return sqrt(distance)
 
+#def knn(k, X_train, y, user_data):
+#    distances = []
+#    for i, df_data in enumerate(X_train):
+#        dist = calculate_distance(df_data, user_data)
+#        distances.append({'distance': dist, 'size': y[i]})
+#    distances.sort(key=lambda data: data['distance'])
+#    distances = distances[:k]
 
-def get_waist_sizes(data_frame):
-    waist_size = []
-    for waist in data_frame['waist_circumference']:
-        if 790 >= waist < 840:
-            waist_size.append('small')
-        elif 840 >= waist < 890:
-            waist_size.append('medium')
-        elif 890 <= waist < 940:
-            waist_size.append('large')
-        elif 940 <= waist < 990:
-            waist_size.append('x-large')
-        elif 990 <= waist < 1040:
-            waist_size.append('xx-large')
-        elif waist > 1050:
-            waist_size.append('xxx-large')
-        elif waist < 780:
-            waist_size.append('x-small')
-    return waist_size
-
-
-def get_chest_sizes(data_frame):
-    chest_size = []
-    for chest in data_frame['chest_circumference']:
-        if 910 >= chest < 960:
-            chest_size.append('small')
-        elif 960 >= chest < 1010:
-            chest_size.append('medium')
-        elif 1010 >= chest < 1060:
-            chest_size.append('large')
-        elif 1060 >= chest < 1110:
-            chest_size.append('x-large')
-        elif 1110 >= chest < 1170:
-            chest_size.append('xx-large')
-        elif chest > 1180:
-            chest_size.append('xxx-large')
-        elif chest < 900:
-            chest_size.append('x-small')
-    return chest_size
 
 def main():
     # fething the dataframe
     python_data_frame = get_data_frame()
 
-    height_sizes = get_height_sizes(python_data_frame)
-    weight_sizes = get_weight_sizes(python_data_frame)
-    waist_sizes = get_waist_sizes(python_data_frame)
-    chest_sizes = get_chest_sizes(python_data_frame)
+    # Fething the lists of sizes used later for reference
+    sizes = get_sizes(python_data_frame)
 
-    print(height_sizes)
-    print(weight_sizes)
-    print(waist_sizes)
-    print(chest_sizes)
+    # Define X value
+    df = pd.DataFrame(zip(python_data_frame['height_cm'],python_data_frame['weight_hg']))
+    df.columns = ['height_cm', 'weight_hg']
 
 
+    X_train = list(zip(df.height_cm.tolist(), df.weight_hg.tolist()))
+
+    # Define y value
+    y = sizes
+
+    # Define k value for number of neighbors
+    k_value = 3
+
+    # User input to array
+    user_height = int(input())
+    user_weight = int(input())
+    # TODO MAKE THIS MOHTERFUCKER __NOT__ STRING
+    user_data = [user_height,user_weight]
+
+    print(user_data)
+
+    # Fething the euclidian distance between values in set and user value
+    some_shit = knn(k_value, X_train, y, user_data)
+
+
+
+
+    # Input user information
+    #user_height = input('Enter user height in cm : ')
+    #user_weight = input('Enter user weight in kg: ')
+    #user_weight = int(user_weight)
+    #user_weight_hg = (user_weight*10)
+
+    #nearest_neighbor = []
+    #for length, weight in zip(python_data_frame['height_cm'], python_data_frame['weight_hg']):
+    #    delta_y = abs(user_height) - abs (length)
+    #    delta_x = abs(user_weight_hg) - abs (weight)
+    #    hypotenuse = delta_y **2 + delta_x **2
+    #    nearest_neighbor.append(math.sqrt(hypotenuse))
 
 
 if __name__ == "__main__":
