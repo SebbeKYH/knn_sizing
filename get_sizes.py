@@ -37,6 +37,18 @@ def calculate_distance(user_data, X_train):
         distance = (user_data[i] - X_train[i]) ** 2
     return sqrt(distance)
 
+def get_neighbors(X_train, user_data, k_value):
+    distances = []
+    for train_row in X_train:
+        dist = calculate_distance(user_data, train_row)
+        distances.append ((train_row, dist))
+    distances.sort(key=lambda tup: tup[1])
+    neighbors = list()
+    for i in range(k_value):
+        neighbors.append(distances[i][0])
+    return neighbors
+
+
 #def knn(k, X_train, y, user_data):
 #    distances = []
 #    for i, df_data in enumerate(X_train):
@@ -69,13 +81,11 @@ def main():
     # User input to array
     user_height = int(input())
     user_weight = int(input())
-    # TODO MAKE THIS MOHTERFUCKER __NOT__ STRING
     user_data = [user_height,user_weight]
 
-    print(user_data)
-
     # Fething the euclidian distance between values in set and user value
-    some_shit = knn(k_value, X_train, y, user_data)
+    neighbors = get_neighbors(X_train, user_data, k_value)
+    print(neighbors)
 
 
 
